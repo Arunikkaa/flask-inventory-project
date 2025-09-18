@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Inventory Management{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div>
+                <div class="logo">
+                    <i class="fas fa-boxes"></i> Inventory System
+                </div>
+                <nav class="sidebar-nav">
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}active{% endif %}">Dashboard</a>
+                    <a href="{{ url_for('products') }}" class="{% if 'products' in request.endpoint %}active{% endif %}">Products</a>
+                    <a href="{{ url_for('locations') }}" class="{% if 'locations' in request.endpoint %}active{% endif %}">Locations</a>
+                    <a href="{{ url_for('movements') }}" class="{% if 'movements' in request.endpoint %}active{% endif %}">Movements</a>
+                    <a href="{{ url_for('report') }}" class="{% if 'report' in request.endpoint %}active{% endif %}">Report</a>
+                    {% endif %}
+                </nav>
+            </div>
+            <div class="logout-link">
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+                {% else %}
+                <a href="{{ url_for('login') }}" class="{% if request.endpoint == 'login' %}active{% endif %}">Login</a>
+                {% endif %}
+            </div>
+        </aside>
+
+        <main class="main-content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class="flashes">
+                        {% for category, message in messages %}
+                            <li class="{{ category }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <h1>Dashboard</h1>
+    <p>Welcome, {{ current_user.username }}!</p>
+
+    <div class="dashboard-stats">
+        <div class="stat-card">
+            <h2>Total Products</h2>
+            <p>{{ total_products }}</p>
+        </div>
+        <div class="stat-card">
+            <h2>Total Locations</h2>
+            <p>{{ total_locations }}</p>
+        </div>
+        <div class="stat-card">
+            <h2>Total Movements</h2>
+            <p>{{ total_movements }}</p>
+        </div>
+    </div>
+    
+    <hr>
+    
+    <div class="dashboard-section">
+        <div class="low-stock-alert">
+            <h2><i class="fas fa-exclamation-triangle"></i> Low Stock Alert</h2>
+            {% if low_stock_items %}
+                <p>The following items are running low (below 10 units). Please replenish stock.</p>
+                <ul>
+                    {% for item in low_stock_items %}
+                        <li><strong>{{ item.product_name }}</strong> ({{ item.location_name }}) - Quantity: {{ item.total_qty }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>All stock levels are currently healthy.</p>
+            {% endif %}
+        </div>
+        
+        <div class="chart-container">
+            <h2>Daily Movements</h2>
+            <canvas id="movementChart"></canvas>
+        </div>
+    </div>
+    
+    <script>
+        const labels = {{ chart_labels | tojson }};
+        const data = {{ chart_values | tojson }};
+        const ctx = document.getElementById('movementChart').getContext('2d');
+        const movementChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Number of Movements',
+                    data: data,
+                    backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    borderWidth: 1,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

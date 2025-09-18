@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Location{% endblock %}
+
+{% block content %}
+    <h1>Edit Location</h1>
+    <form method="POST">
+        <h2>Edit Location: {{ location.name }}</h2>
+        <label for="location_id">Location ID:</label>
+        <input type="text" id="location_id" name="location_id" value="{{ location.id }}" readonly><br><br>
+        <label for="name">Location Name:</label>
+        <input type="text" id="name" name="name" value="{{ location.name }}" required><br><br>
+        <button type="submit">Update Location</button>
+    </form>
+    <a href="{{ url_for('locations') }}" class="btn btn-secondary">Cancel</a>
+{% endblock %}

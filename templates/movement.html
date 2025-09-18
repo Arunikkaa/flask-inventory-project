@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Product Movements{% endblock %}
+
+{% block content %}
+    <h1>Product Movements</h1>
+    <form method="POST" class="card">
+        <h2>Record New Movement</h2>
+        <div class="form-group">
+            <label for="product_id">Product:</label>
+            <select id="product_id" name="product_id" required>
+                <option value="">--Select Product--</option>
+                {% for product in products %}
+                <option value="{{ product.id }}">{{ product.name }} ({{ product.id }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="from_location">From Location:</label>
+            <select id="from_location" name="from_location">
+                <option value="">--Select Location-- (Receiving a product)</option>
+                {% for location in locations %}
+                <option value="{{ location.id }}">{{ location.name }} ({{ location.id }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="to_location">To Location:</label>
+            <select id="to_location" name="to_location">
+                <option value="">--Select Location-- (Sending a product)</option>
+                {% for location in locations %}
+                <option value="{{ location.id }}">{{ location.name }} ({{ location.id }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="qty">Quantity:</label>
+            <input type="number" id="qty" name="qty" required min="1">
+        </div>
+        <button type="submit" class="btn btn-primary">Record Movement</button>
+    </form>
+
+    <hr>
+    <div class="card">
+        <h2>Recent Movements</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Product</th>
+                    <th>From Location</th>
+                    <th>To Location</th>
+                    <th>Quantity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for movement in movements %}
+                <tr>
+                    <td>{{ movement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ movement.product.name }}</td>
+                    <td>{{ movement.from_location_obj.name if movement.from_location_obj else 'N/A' }}</td>
+                    <td>{{ movement.to_location_obj.name if movement.to_location_obj else 'N/A' }}</td>
+                    <td>{{ movement.qty }}</td>
+                    <td class="action-buttons">
+                        <a href="{{ url_for('edit_movement', movement_id=movement.id) }}" class="btn btn-edit">Edit</a>
+                        <form action="{{ url_for('delete_movement', movement_id=movement.id) }}" method="POST">
+                            <button type="submit" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete this movement?');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

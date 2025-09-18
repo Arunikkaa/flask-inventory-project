@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Inventory Report{% endblock %}
+
+{% block content %}
+    <h1>Inventory Report</h1>
+    <p>Current balance of each product in each location.</p>
+    
+    <div class="card">
+        <form method="GET" action="{{ url_for('report') }}" class="report-filters">
+            <div class="filter-group">
+                <label for="product_id">Filter by Product:</label>
+                <select name="product_id" id="product_id">
+                    <option value="">All Products</option>
+                    {% for product in products %}
+                        <option value="{{ product.id }}" {% if selected_product == product.id %}selected{% endif %}>{{ product.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="location_id">Filter by Location:</label>
+                <select name="location_id" id="location_id">
+                    <option value="">All Locations</option>
+                    {% for location in locations %}
+                        <option value="{{ location.id }}" {% if selected_location == location.id %}selected{% endif %}>{{ location.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Filter Report</button>
+            <a href="{{ url_for('export_report_csv') }}" class="btn btn-export">Export to CSV</a>
+        </form>
+    </div>
+
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Location</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in report_data %}
+                <tr>
+                    <td>{{ item.product_name }}</td>
+                    <td>{{ item.location_name }}</td>
+                    <td>{{ item.total_qty }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3">No inventory found for the selected filters.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
