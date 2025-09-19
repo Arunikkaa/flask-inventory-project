@@ -10,7 +10,7 @@ Update Stock: Functionality to adjust the quantity of existing products, reflect
 
 Generate Reports: Create basic reports to get an overview of the current inventory status.
 
-Responsive Design: A clean user interface that is accessible on both desktop and mobile devices.
+when u click export csv button -- it will download the report in excel sheet ..
 
 
 ### Screenshots
@@ -22,5 +22,4 @@ Responsive Design: A clean user interface that is accessible on both desktop and
 ![login Screenshot]   (images/login.png)
 ![product Screenshot]   (images/product.png)
 ![movement Screenshot]   (images/movement.png)
-
-
+![Excel Screenshot]  (images/excel.png)
